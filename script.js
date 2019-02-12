@@ -88,15 +88,18 @@ function createTableValues(values) {
     tr.innerHTML = 'x<sub>i</sub>(' + dimension + ') = '
     body.appendChild(tr)
 
-    for (let i = 0; i < values.length / 10; i++) {
-        let tr = document.createElement('tr')
-        for (let j = 0; j < values.length / 10; j++) {
-            let td = document.createElement('td');
-            td.innerHTML = values[Number(String(i) + String(j))].toFixed(decimals)
-            tr.appendChild(td)
+    for (let i = 0; i < values.length; i++) {
+        if (i % 10 == 0) {
+            let tr = document.createElement('tr')
             body.appendChild(tr)
         }
+
+        let td = document.createElement('td');
+        td.innerHTML = values[i].toFixed(decimals)
+        body.children[body.children.length - 1].appendChild(td)
+
     }
+
 
     table.appendChild(body)
 
