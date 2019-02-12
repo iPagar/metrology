@@ -74,7 +74,7 @@ function createSecond(values) {
     let formulaFirst = katex.renderToString('x_{max} = ' + values[values.length - 1] + '(' + dimension + ')' + ' => G_{max} = \\frac{|x_{max} - \\bar{x}|}{S_x} = \\frac{|' + values[values.length - 1] + '-' + avg(values) + '|}{' + sd(values) + '} = ' + gMax(values));
     let formulaSecond = katex.renderToString('x_{min} = ' + values[0] + '(' + dimension + ')' + ' => G_{min} = \\frac{|x_{min} - \\bar{x}|}{S_x} = \\frac{|' + values[0] + '-' + avg(values) + '|}{' + sd(values) + '} = ' + gMin(values));
 
-    first.innerHTML = '<div style="display: block">2) Выявляем результаты, содержащие грубые погрешности</div><div>n = 100, q = 0.05, => G<sub>t</sub> = ' + gT() + '<div>' + formulaFirst + '</div>'
+    first.innerHTML = '<div style="display: block">2) Выявляем результаты, содержащие грубые погрешности</div><div>n = 100, q = 0.05, => G<sub>t</sub> = ' + gT() + '<div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div>'
 
     return first
 }
