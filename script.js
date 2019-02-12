@@ -61,7 +61,7 @@ function g(values, q) {
 function createFirst(values) {
     let first = document.createElement('div')
     let formulaFirst = katex.renderToString('\\bar{x} = \\frac{1}{n}\\displaystyle\\sum_{i=1}^nx_{i} = \\frac{1}{' + values.length + '}(' + values[0] + ' + ... +' + values[values.length - 1] + ') = ' + avg(values) + '(' + dimension + ')');
-    let formulaSecond = katex.renderToString('S_x = \\sqrt{\\frac{1}{n - 1}\\displaystyle\\sum_{i=1}^n(x_{i} - \\bar{x})^{2}} = \\sqrt{\\frac{1}{' + values.length + '}(' + values[0] + '-' +
+    let formulaSecond = katex.renderToString('S_x = \\sqrt{\\frac{1}{n - 1}\\displaystyle\\sum_{i=1}^n(x_{i} - \\bar{x})^{2}} = \\sqrt{\\frac{1}{' + (values.length - 1) + '}(' + values[0] + '-' +
         avg(values) + ')^{2}' + ' + ... + (' + values[values.length - 1] + '-' +
         avg(values) + ')^{2}} = ' + sd(values) + '(' + dimension + ')');
     first.innerHTML = '<div style="display: block">1) Вычисляем x&#773; и S<sub>x</sub> результатов измерений</div> <div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div>'
@@ -71,10 +71,10 @@ function createFirst(values) {
 
 function createSecond(values) {
     let first = document.createElement('div')
-    let formulaFirst = katex.renderToString('x_{max} = ' + values[values.length - 1] + ' => G_{max} = \\frac{|x_{max} - \\bar{x}|}{S_x} = \\frac{|' + values[values.length - 1] + '-' + avg(values) + '|}{' + sd(values) + '} = ' + gMax(values));
-    let formulaSecond = katex.renderToString('x_{min} = ' + values[values.length - 1] + ' => G_{min} = \\frac{|x_{min} - \\bar{x}|}{S_x} = \\frac{|' + values[values.length - 1] + '-' + avg(values) + '|}{' + sd(values) + '} = ' + gMin(values));
+    let formulaFirst = katex.renderToString('x_{max} = ' + values[values.length - 1] + '(' + dimension + ')' + ' => G_{max} = \\frac{|x_{max} - \\bar{x}|}{S_x} = \\frac{|' + values[values.length - 1] + '-' + avg(values) + '|}{' + sd(values) + '} = ' + gMax(values));
+    let formulaSecond = katex.renderToString('x_{min} = ' + values[0] + '(' + dimension + ')' + ' => G_{min} = \\frac{|x_{min} - \\bar{x}|}{S_x} = \\frac{|' + values[0] + '-' + avg(values) + '|}{' + sd(values) + '} = ' + gMin(values));
 
-    first.innerHTML = '<div style="display: block">2) Выявляем результаты, содержащие грубые погрешности</div><div>n = 100, q = 0.05, => G<sub>t</sub> = ' + gT() + '<div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div><div>G<sub>max</sub> < G<sub>t</sub> и G<sub>min</sub> < G<sub>t</sub> => грубых погрешностей не обнаружено'
+    first.innerHTML = '<div style="display: block">2) Выявляем результаты, содержащие грубые погрешности</div><div>n = 100, q = 0.05, => G<sub>t</sub> = ' + gT() + '<div>' + formulaFirst + '</div>'
 
     return first
 }
