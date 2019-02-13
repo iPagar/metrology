@@ -1,5 +1,6 @@
 let decimals = null;
 let dimension = null
+let repeat = null
 
 function avg(values) {
     let total = 0;
@@ -30,19 +31,20 @@ function gT() {
 function gMax(values) {
     const gMax = Math.abs(Math.max(...values) - avg(values)) / sd(values)
 
-    return gMax.toFixed(decimals)
+    return gMax.toFixed(2)
 }
 
 function gMin(values) {
     const gMin = Math.abs(Math.min(...values) - avg(values)) / sd(values)
 
-    return gMin.toFixed(decimals)
+    return gMin.toFixed(2)
 }
 
 function g(values, q) {
     const grabbs = gT()
     const min = gMin(values)
     const max = gMax(values)
+    let error = false
 
     console.log(`x: ${values}`)
     console.log(`x': ${avg(values)}`)
@@ -53,9 +55,28 @@ function g(values, q) {
     console.log(`Gmax: ${max}`)
     console.log(`Gt: ${grabbs}`)
 
-    $('#test').empty().append(createTableValues(values))
-    $('#test').append(createFirst(values))
-    $('#test').append(createSecond(values))
+    let container = document.createElement('div')
+    container.id = repeat
+    $('#test').append(container)
+    $('#' + repeat).append(createTableValues(values))
+    $('#' + repeat).append(createFirst(values))
+    $('#' + repeat).append(createSecond(values))
+
+    if (min > grabbs) {
+        error = true
+        values.shift()
+    }
+    console.log(typeof(max), typeof(gT))
+    if (max > grabbs) {
+        error = true
+        values.pop()
+    }
+
+    if (error) {
+        repeat++
+        console.log(1)
+        g(values, q)
+    }
 }
 
 function createFirst(values) {
@@ -64,17 +85,17 @@ function createFirst(values) {
     let formulaSecond = katex.renderToString('S_x = \\sqrt{\\frac{1}{n - 1}\\displaystyle\\sum_{i=1}^n(x_{i} - \\bar{x})^{2}} = \\sqrt{\\frac{1}{' + (values.length - 1) + '}(' + values[0] + '-' +
         avg(values) + ')^{2}' + ' + ... + (' + values[values.length - 1] + '-' +
         avg(values) + ')^{2}} = ' + sd(values) + '(' + dimension + ')');
-    first.innerHTML = '<div style="display: block">1) Вычисляем x&#773; и S<sub>x</sub> результатов измерений</div> <div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div>'
+    first.innerHTML = '<div style="display: block">' + repeat + ') Вычисляем x̅ и S<sub>x</sub> результатов измерений</div> <div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div>'
 
     return first
 }
 
 function createSecond(values) {
     let first = document.createElement('div')
-    let formulaFirst = katex.renderToString('x_{max} = ' + values[values.length - 1] + '(' + dimension + ')' + ' => G_{max} = \\frac{|x_{max} - \\bar{x}|}{S_x} = \\frac{|' + values[values.length - 1] + '-' + avg(values) + '|}{' + sd(values) + '} = ' + gMax(values));
-    let formulaSecond = katex.renderToString('x_{min} = ' + values[0] + '(' + dimension + ')' + ' => G_{min} = \\frac{|x_{min} - \\bar{x}|}{S_x} = \\frac{|' + values[0] + '-' + avg(values) + '|}{' + sd(values) + '} = ' + gMin(values));
+    let formulaFirst = katex.renderToString('x_{max} = ' + values[values.length - 1].toFixed(2) + '(' + dimension + ')' + ' => G_{max} = \\frac{|x_{max} - \\bar{x}|}{S_x} = \\frac{|' + values[values.length - 1].toFixed(2) + '-' + avg(values) + '|}{' + sd(values) + '} = ' + Number(gMax(values)).toFixed(2));
+    let formulaSecond = katex.renderToString('x_{min} = ' + values[0].toFixed(2) + '(' + dimension + ')' + ' => G_{min} = \\frac{|x_{min} - \\bar{x}|}{S_x} = \\frac{|' + values[0].toFixed(2) + '-' + avg(values) + '|}{' + sd(values) + '} = ' + Number(gMin(values)).toFixed(2));
 
-    first.innerHTML = '<div style="display: block">2) Выявляем результаты, содержащие грубые погрешности</div><div>n = 100, q = 0.05, => G<sub>t</sub> = ' + gT() + '<div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div>'
+    first.innerHTML = '<div style="display: block">' + ++repeat + ') Выявляем результаты, содержащие грубые погрешности</div><div>n = ' + values.length + ', q = 0.05, => G<sub>t</sub> = ' + gT() + '<div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div>'
 
     return first
 }
@@ -100,7 +121,6 @@ function createTableValues(values) {
 
     }
 
-
     table.appendChild(body)
 
     return table
@@ -109,10 +129,11 @@ function createTableValues(values) {
 $('#butt').bind('click', function() {
     const inputValues = $('#inputValues').val()
     let values = inputValues.replace(/,/g, '.').match(/[+-]?([0-9]*[.])?[0-9]+/g)
-    decimals = values[0].toString().split('.').pop().length
+    decimals = Math.max(...values).toString().split('.').pop().length
     dimension = $('#dimension').val()
     values = values.map(value => Number(Number(value).toFixed(decimals)))
-    console.log(values);
     const q = 0.05
+    repeat = 1
+    $('#test').empty()
     g(values, q)
 });
