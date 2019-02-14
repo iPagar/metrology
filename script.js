@@ -1,8 +1,11 @@
 let decimals = null;
 let dimension = null
 let repeat = null
+let values = null
+let q = null
+let grabbs = null
 
-function avg(values) {
+function avg() {
     let total = 0;
     for (let i = 0; i < values.length; i++) {
         total += values[i];
@@ -12,7 +15,7 @@ function avg(values) {
     return avg.toFixed(decimals)
 }
 
-function sd(values) {
+function sd() {
     let total = 0;
     for (let i = 0; i < values.length; i++) {
         total += Math.pow(values[i] - avg(values), 2);
@@ -23,27 +26,25 @@ function sd(values) {
 }
 
 function gT() {
-    const grabbs = 3.29
-
-    return grabbs
+    grabbs = prompt(`Введите критерий граббса при n = ${values.length}, q = ${q}`)
 }
 
-function gMax(values) {
+function gMax() {
     const gMax = Math.abs(Math.max(...values) - avg(values)) / sd(values)
 
     return gMax.toFixed(2)
 }
 
-function gMin(values) {
+function gMin() {
     const gMin = Math.abs(Math.min(...values) - avg(values)) / sd(values)
 
     return gMin.toFixed(2)
 }
 
-function g(values, q) {
-    const grabbs = gT()
-    const min = gMin(values)
-    const max = gMax(values)
+function g() {
+    gT()
+    const min = gMin()
+    const max = gMax()
     let error = false
 
     console.log(`x: ${values}`)
@@ -58,15 +59,15 @@ function g(values, q) {
     let container = document.createElement('div')
     container.id = repeat
     $('#test').append(container)
-    $('#' + repeat).append(createTableValues(values))
-    $('#' + repeat).append(createFirst(values))
-    $('#' + repeat).append(createSecond(values))
+    $('#' + repeat).append(createTableValues())
+    $('#' + repeat).append(createFirst())
+    $('#' + repeat).append(createSecond())
 
     if (min > grabbs) {
         error = true
         values.shift()
     }
-    console.log(typeof(max), typeof(gT))
+
     if (max > grabbs) {
         error = true
         values.pop()
@@ -74,12 +75,11 @@ function g(values, q) {
 
     if (error) {
         repeat++
-        console.log(1)
-        g(values, q)
+        g()
     }
 }
 
-function createFirst(values) {
+function createFirst() {
     let first = document.createElement('div')
     let formulaFirst = katex.renderToString('\\bar{x} = \\frac{1}{n}\\displaystyle\\sum_{i=1}^nx_{i} = \\frac{1}{' + values.length + '}(' + values[0] + ' + ... +' + values[values.length - 1] + ') = ' + avg(values) + '(' + dimension + ')');
     let formulaSecond = katex.renderToString('S_x = \\sqrt{\\frac{1}{n - 1}\\displaystyle\\sum_{i=1}^n(x_{i} - \\bar{x})^{2}} = \\sqrt{\\frac{1}{' + (values.length - 1) + '}(' + values[0] + '-' +
@@ -90,17 +90,17 @@ function createFirst(values) {
     return first
 }
 
-function createSecond(values) {
+function createSecond() {
     let first = document.createElement('div')
     let formulaFirst = katex.renderToString('x_{max} = ' + values[values.length - 1].toFixed(2) + '(' + dimension + ')' + ' => G_{max} = \\frac{|x_{max} - \\bar{x}|}{S_x} = \\frac{|' + values[values.length - 1].toFixed(2) + '-' + avg(values) + '|}{' + sd(values) + '} = ' + Number(gMax(values)).toFixed(2));
     let formulaSecond = katex.renderToString('x_{min} = ' + values[0].toFixed(2) + '(' + dimension + ')' + ' => G_{min} = \\frac{|x_{min} - \\bar{x}|}{S_x} = \\frac{|' + values[0].toFixed(2) + '-' + avg(values) + '|}{' + sd(values) + '} = ' + Number(gMin(values)).toFixed(2));
 
-    first.innerHTML = '<div style="display: block">' + ++repeat + ') Выявляем результаты, содержащие грубые погрешности</div><div>n = ' + values.length + ', q = 0.05, => G<sub>t</sub> = ' + gT() + '<div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div>'
+    first.innerHTML = '<div style="display: block">' + ++repeat + ') Выявляем результаты, содержащие грубые погрешности</div><div>n = ' + values.length + ', q = 0.05, => G<sub>t</sub> = ' + grabbs + '<div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div>'
 
     return first
 }
 
-function createTableValues(values) {
+function createTableValues() {
     let table = document.createElement('table')
     table.className = "table table-sm"
     let body = document.createElement('tbody')
@@ -127,13 +127,12 @@ function createTableValues(values) {
 }
 
 $('#butt').bind('click', function() {
-    const inputValues = $('#inputValues').val()
-    let values = inputValues.replace(/,/g, '.').match(/[+-]?([0-9]*[.])?[0-9]+/g)
+    values = $('#inputValues').val().replace(/,/g, '.').match(/[+-]?([0-9]*[.])?[0-9]+/g)
     decimals = Math.max(...values).toString().split('.').pop().length
     dimension = $('#dimension').val()
     values = values.map(value => Number(Number(value).toFixed(decimals)))
-    const q = 0.05
+    q = $('#q').val()
     repeat = 1
     $('#test').empty()
-    g(values, q)
+    g()
 });
