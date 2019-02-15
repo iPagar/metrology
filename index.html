@@ -20,11 +20,17 @@
 <body>
     <h1 style="text-align: center">Метрология</h1>
     <div class="jumbotron">
-        <textarea id="inputValues" cols="40" rows="3" placeholder="введите выборку"></textarea>
-        <input id="q" placeholder="введите уровень значимости" style="display: block; margin: 5px"></input>
-        <input id="dimension" placeholder="введите размерность" style="display: block; margin: 5px"></input>
-        <hr class="my-4">
-        <button id="butt" type="button" class="btn btn-primary" style="display: block; align-self: center;">Посчитать грубые погрешности</button>
+        <div class="input-group mb-3">
+            <div id="inputForm">
+                <textarea id="inputValues" class="form-control" cols="40" rows="3" placeholder="введите выборку"></textarea>
+                <input id="q" class="form-control" placeholder="введите уровень значимости" class="form-control">
+                <input id="dimension" placeholder="введите размерность" class="form-control"></input>
+                <input id="system" placeholder="введите систем. погрешность" class="form-control"></input>
+                <input id="borderSystem" placeholder="введите границы погрешности" class="form-control"></input>
+                <button id="send" type="button" class="btn btn-primary btn-lg btn-block">Рассчитать</button></div>
+            <div id="defaultValues" style="display: block; align-self: center;" />
+        </div>
+    </div>
     </div>
     <div id="test"></div>
     <!-- Optional JavaScript -->
@@ -36,3 +42,4 @@
 </body>
 
 </html>
+​
