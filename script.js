@@ -150,73 +150,74 @@ function createFirst() {
 
 function createSecond() {
     let first = document.createElement('div')
-    let formulaFirst = katex.renderToString('x_{max} = ' + Math.abs(Math.max(...values))) + '(' + dimension + ')' + katex.renderToString(' => G_{max} = \\frac{|x_{max} - \\bar{x}|}{S_x} = \\frac{|' + values[values.length - 1] + '-' + avg() + '|}{' + sd() + '} = ') + gMax();
-    if (gMax() > grabbs)
-        formulaFirst += katex.renderToString('~=>~G_{max} > G_t~=>~x_{max}') + 'содержит грубую погрешность';
-    else
-        formulaFirst += katex.renderToString(' => G_{max} \\le G_t~=>~x_{max}') + 'не содержит грубую погрешность';
-    let formulaSecond = katex.renderToString('x_{min} = ' + Math.abs(Math.min(...values))) + '(' + dimension + ')' + katex.renderToString('~=>~G_{min} = \\frac{|x_{min} - \\bar{x}|}{S_x} = \\frac{|' + values[0] + '-' + avg() + '|}{' + sd() + '} = ') + gMin();
-    if (gMin() > grabbs)
-        formulaSecond += katex.renderToString(' => G_{min} > G_t~=>~x_{min}') + 'содержит грубую погрешность';
-    else
-        formulaSecond += katex.renderToString(' => G_{min} \\le G_t~=>~x_{min}') + 'не содержит грубую погрешность';
-    first.innerHTML = '<div style="display: block">' + ++repeat + ') Выявляем результаты, содержащие грубые погрешности</div><div>n = ' + values.length + ', q = ' + q + ', => G<sub>t</sub> = ' + grabbs + '<div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div>'
-    return first
-}
-
-function createTableValues() {
-    let table = document.createElement('table')
-    table.className = "table table-sm"
-    let body = document.createElement('tbody')
-    let tr = document.createElement('tr')
-    tr.innerHTML = 'x<sub>i</sub>(' + dimension + ') = '
-    body.appendChild(tr)
-    for (let i = 0; i < values.length; i++) {
-        if (i % 10 == 0) {
-            let tr = document.createElement('tr')
-            body.appendChild(tr)
+    const min = Math.abs(Math.min(...values)))
+const max = Math.abs(Math.max(...values)))
+let formulaFirst = katex.renderToString('x_{max} = ' + max + '(' + dimension + ')' + katex.renderToString(' => G_{max} = \\frac{|x_{max} - \\bar{x}|}{S_x} = \\frac{|' + max + '-' + avg() + '|}{' + sd() + '} = ') + gMax();
+        if (gMax() > grabbs)
+            formulaFirst += katex.renderToString('~=>~G_{max} > G_t~=>~x_{max}') + 'содержит грубую погрешность';
+        else
+            formulaFirst += katex.renderToString(' => G_{max} \\le G_t~=>~x_{max}') + 'не содержит грубую погрешность';
+        let formulaSecond = katex.renderToString('x_{min} = ' + min + '(' + dimension + ')' + katex.renderToString('~=>~G_{min} = \\frac{|x_{min} - \\bar{x}|}{S_x} = \\frac{|' + min + '-' + avg() + '|}{' + sd() + '} = ') + gMin();
+            if (gMin() > grabbs)
+                formulaSecond += katex.renderToString(' => G_{min} > G_t~=>~x_{min}') + 'содержит грубую погрешность';
+            else
+                formulaSecond += katex.renderToString(' => G_{min} \\le G_t~=>~x_{min}') + 'не содержит грубую погрешность'; first.innerHTML = '<div style="display: block">' + ++repeat + ') Выявляем результаты, содержащие грубые погрешности</div><div>n = ' + values.length + ', q = ' + q + ', => G<sub>t</sub> = ' + grabbs + '<div>' + formulaFirst + '</div>' + '<div>' + formulaSecond + '</div>'
+            return first
         }
-        let td = document.createElement('td');
-        td.innerHTML = values[i].toFixed(decimals - decimalsAdd)
-        body.children[body.children.length - 1].appendChild(td)
-    }
-    table.appendChild(body)
-    return table
-}
 
-function calc() {
-    g()
-    if (system && borderSystem)
-        showCorrection()
-    showResult()
-}
+        function createTableValues() {
+            let table = document.createElement('table')
+            table.className = "table table-sm"
+            let body = document.createElement('tbody')
+            let tr = document.createElement('tr')
+            tr.innerHTML = 'x<sub>i</sub>(' + dimension + ') = '
+            body.appendChild(tr)
+            for (let i = 0; i < values.length; i++) {
+                if (i % 10 == 0) {
+                    let tr = document.createElement('tr')
+                    body.appendChild(tr)
+                }
+                let td = document.createElement('td');
+                td.innerHTML = values[i].toFixed(decimals - decimalsAdd)
+                body.children[body.children.length - 1].appendChild(td)
+            }
+            table.appendChild(body)
+            return table
+        }
 
-function showValues() {
-    let table = createTableValues()
-    let container = document.createElement('div')
-    container.append('Дано:')
-    container.append(document.createElement('br'))
-    container.append(table)
-    container.append('q = ' + q)
-    $('#defaultValues').append(container)
-}
+        function calc() {
+            g()
+            if (system && borderSystem)
+                showCorrection()
+            showResult()
+        }
 
-function getInputValues() {
-    values = $('#inputValues').val().replace(/,/g, '.').match(/[+-]?([0-9]*[.])?[0-9]+/g)
-    decimals = Math.max(...values).toString().split('.').pop().length + decimalsAdd
-    dimension = $('#dimension').val()
-    values = values.map(value => Number(value))
-    q = Number($('#q').val())
-    system = Number(($('#system').val()).replace(/,/g, '.').match(/[+-]?([0-9]*[.])?[0-9]+/g))
-    borderSystem = Number(($('#borderSystem').val()).replace(/,/g, '.').match(/[+-]?([0-9]*[.])?[0-9]+/g))
-    repeat = 1
-}
+        function showValues() {
+            let table = createTableValues()
+            let container = document.createElement('div')
+            container.append('Дано:')
+            container.append(document.createElement('br'))
+            container.append(table)
+            container.append('q = ' + q)
+            $('#defaultValues').append(container)
+        }
 
-$('#send').bind('click', function() {
-    getInputValues()
-    showValues()
-    $('#test').empty()
-    $('#defaultValues').empty()
-    $('#test').append("Решение:")
-    calc()
-});
+        function getInputValues() {
+            values = $('#inputValues').val().replace(/,/g, '.').match(/[+-]?([0-9]*[.])?[0-9]+/g)
+            decimals = Math.max(...values).toString().split('.').pop().length + decimalsAdd
+            dimension = $('#dimension').val()
+            values = values.map(value => Number(value))
+            q = Number($('#q').val())
+            system = Number(($('#system').val()).replace(/,/g, '.').match(/[+-]?([0-9]*[.])?[0-9]+/g))
+            borderSystem = Number(($('#borderSystem').val()).replace(/,/g, '.').match(/[+-]?([0-9]*[.])?[0-9]+/g))
+            repeat = 1
+        }
+
+        $('#send').bind('click', function() {
+            getInputValues()
+            showValues()
+            $('#test').empty()
+            $('#defaultValues').empty()
+            $('#test').append("Решение:")
+            calc()
+        });
