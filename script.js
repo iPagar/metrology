@@ -150,12 +150,12 @@ function createFirst() {
 
 function createSecond() {
     let first = document.createElement('div')
-    let formulaFirst = katex.renderToString('x_{max} = ' + values[values.length - 1]) + '(' + dimension + ')' + katex.renderToString(' => G_{max} = \\frac{|x_{max} - \\bar{x}|}{S_x} = \\frac{|' + values[values.length - 1] + '-' + avg() + '|}{' + sd() + '} = ') + gMax();
+    let formulaFirst = katex.renderToString('x_{max} = ' + Math.abs(Math.max(...values))) + '(' + dimension + ')' + katex.renderToString(' => G_{max} = \\frac{|x_{max} - \\bar{x}|}{S_x} = \\frac{|' + values[values.length - 1] + '-' + avg() + '|}{' + sd() + '} = ') + gMax();
     if (gMax() > grabbs)
         formulaFirst += katex.renderToString('~=>~G_{max} > G_t~=>~x_{max}') + 'содержит грубую погрешность';
     else
         formulaFirst += katex.renderToString(' => G_{max} \\le G_t~=>~x_{max}') + 'не содержит грубую погрешность';
-    let formulaSecond = katex.renderToString('x_{min} = ' + values[0]) + '(' + dimension + ')' + katex.renderToString('~=>~G_{min} = \\frac{|x_{min} - \\bar{x}|}{S_x} = \\frac{|' + values[0] + '-' + avg() + '|}{' + sd() + '} = ') + gMin();
+    let formulaSecond = katex.renderToString('x_{min} = ' + Math.abs(Math.min(...values))) + '(' + dimension + ')' + katex.renderToString('~=>~G_{min} = \\frac{|x_{min} - \\bar{x}|}{S_x} = \\frac{|' + values[0] + '-' + avg() + '|}{' + sd() + '} = ') + gMin();
     if (gMin() > grabbs)
         formulaSecond += katex.renderToString(' => G_{min} > G_t~=>~x_{min}') + 'содержит грубую погрешность';
     else
