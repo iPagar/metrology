@@ -20,6 +20,7 @@ function showResult() {
   container.innerHTML += ++repeat + ") Результат измерений<br>";
 
   if (checkCorrection()) {
+    values = values.map(value => value + system);
     const k = (
       (Number(epsilon) + Number(borderSystem)) /
       (Number(sdX()) + Number(sdSystem()))
