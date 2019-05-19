@@ -80,7 +80,12 @@ function granicaTable(r, min, max, h) {
 								value >= min + (i - 1) * h &&
 								value < min + i * h
 						).length;
-					else td.innerHTML = 1;
+					else
+						td.innerHTML = values.filter(
+							value =>
+								value >= min + (i - 1) * h &&
+								value <= min + i * h
+						).length;
 					temp.push(td.innerHTML);
 					break;
 			}
