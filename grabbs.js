@@ -10,212 +10,54 @@ let p = 0.95;
 const decimalsAdd = 2;
 
 function showResult() {
-	let container = document.createElement("div");
-	container.id = "result";
+    let container = document.createElement('div')
+    container.id = "result"
 
-	const kvantilStudenta = prompt(
-		"Введите квантиль стьюдента при " +
-			"n = " +
-			values.length +
-			", p = 0.95"
-	);
-	const epsilon = (kvantilStudenta * sdX()).toFixed(decimals);
-	container.innerHTML += ++repeat + ") Результат измерений<br>";
+    const kvantilStudenta = prompt('Введите квантиль стьюдента при ' + 'n = ' + values.length + ', p = 0.95')
+    const epsilon = (kvantilStudenta * sdX()).toFixed(decimals)
+    container.innerHTML += ++repeat + ') Результат измерений<br>'
 
-	if (checkCorrection()) {
-		values = values.map(value => value + system);
-		const k = (
-			(Number(epsilon) + Number(borderSystem)) /
-			(Number(sdX()) + Number(sdSystem()))
-		).toFixed(decimals);
-		const skoSum = Math.sqrt(
-			sdX() * sdX() + sdSystem() * sdSystem()
-		).toFixed(decimals);
-		const delta = (k * skoSum).toFixed(decimals);
+    if (checkCorrection()) {
+        const k = ((epsilon * borderSystem) / (sdX() * sdSystem())).toFixed(decimals)
+        const skoSum = (Math.sqrt(sdX() * sdX() + sdSystem() * sdSystem())).toFixed(decimals)
+        const delta = (k * skoSum).toFixed(decimals)
 
-		container.innerHTML +=
-			katex.renderToString("x = \\bar{x} \\pm \\Delta") +
-			", p = " +
-			p +
-			"<br>";
-		container.innerHTML +=
-			"n = " +
-			values.length +
-			", p = 0.95 =>" +
-			katex.renderToString("t_{\\frac{1+p}{2}}(n-1)=") +
-			kvantilStudenta +
-			"<br>";
-		container.innerHTML +=
-			katex.renderToString(
-				"S_{\\bar{x}} = \\frac{S_{x}}{\\sqrt{n}} = \\frac{" +
-					sd() +
-					"}{\\sqrt{" +
-					values.length +
-					"}}=" +
-					sdX()
-			) +
-			"(" +
-			dimension +
-			")" +
-			"<br>";
-		container.innerHTML +=
-			katex.renderToString(
-				"\\pm\\varepsilon=\\pm t_{\\frac{1+p}{2}}(n-1)\\times S_{\\bar{x}}=\\pm(" +
-					kvantilStudenta +
-					"\\times" +
-					sdX() +
-					")=\\pm(" +
-					epsilon +
-					")"
-			) +
-			"(" +
-			dimension +
-			")" +
-			"<br>";
-		container.innerHTML +=
-			katex.renderToString(
-				"k = \\frac{\\varepsilon + \\Theta_{\\sum}}{S_{\\bar{x}} + S_{\\Theta}}= \\frac{" +
-					epsilon +
-					"+ " +
-					borderSystem +
-					"}{" +
-					sdX() +
-					"+" +
-					sdSystem() +
-					"}=" +
-					k
-			) + "<br>";
-		container.innerHTML +=
-			katex.renderToString(
-				"S_{\\sum} = \\sqrt{S_{\\bar{x}}^2 + S_{\\Theta}^2} = \\sqrt{" +
-					sdX().toFixed(decimals) +
-					"^2 + " +
-					sdSystem().toFixed(decimals) +
-					"^2}=" +
-					skoSum
-			) + "<br>";
-		container.innerHTML +=
-			katex.renderToString("\\Delta = k * S_{\\sum}=" + delta) + "<br>";
+        container.innerHTML += katex.renderToString('x = \\bar{x} \\pm \\Delta') + ', p = ' + p + '<br>'
+        container.innerHTML += 'n = ' + values.length + ', p = 0.95 =>' + katex.renderToString('t_{\\frac{1+p}{2}}(n-1)=') + kvantilStudenta + '<br>'
+        container.innerHTML += katex.renderToString('S_{\\bar{x}} = \\frac{S_{x}}{\\sqrt{n}} = \\frac{' + sd() + '}{\\sqrt{' + values.length + '}}=' + sdX()) + '(' + dimension + ')' + '<br>'
+        container.innerHTML += katex.renderToString('\\pm\\varepsilon=\\pm t_{\\frac{1+p}{2}}(n-1)\\times S_{\\bar{x}}=\\pm(' + kvantilStudenta + '\\times' + sdX() + ')=\\pm(' + epsilon + ')') + '(' + dimension + ')' +
+            '<br>'
+        container.innerHTML += katex.renderToString('k = \\frac{\\varepsilon + \\Theta_{sum}}{S_{\\bar{x}} + S_{\\Theta}}= \\frac{' + epsilon + '+ ' + borderSystem + '}{' + sdX() + '+' + sdSystem() + '}=' + k) + '<br>'
+        container.innerHTML += katex.renderToString('S_{\\sum} = \\sqrt{S_{\\bar{x}}^2 + S_{\\Theta}^2} = \\sqrt{' + (Math.pow(sdX(), 2)).toFixed(decimals) + '^2 + ' + (Math.pow(sdSystem(), 2)).toFixed(decimals) + '^2}=' + skoSum) + '<br>'
+        container.innerHTML += katex.renderToString('\\Delta = k * S_{\\sum}=' + delta) + '<br>'
 
-		container.innerHTML +=
-			"x = (" +
-			avg() +
-			katex.renderToString("\\pm") +
-			delta +
-			")" +
-			dimension +
-			", p = " +
-			p +
-			"<br>";
-	} else {
-		container.innerHTML +=
-			katex.renderToString(
-				"x = \\bar{x} \\pm t_{\\frac{1+p}{2}}(n-1)\\times S_x"
-			) +
-			", p = " +
-			p +
-			"<br>";
-		container.innerHTML +=
-			"n = " +
-			values.length +
-			", p = 0.95 =>" +
-			katex.renderToString("t_{\\frac{1+p}{2}}(n-1)=") +
-			kvantilStudenta +
-			"<br>";
-		container.innerHTML +=
-			katex.renderToString(
-				"S_{\\bar{x}} = \\frac{S_{x}}{\\sqrt{n}} = \\frac{" +
-					sd() +
-					"}{\\sqrt{" +
-					values.length +
-					"}}=" +
-					sdX()
-			) +
-			"(" +
-			dimension +
-			")" +
-			"<br>";
-		container.innerHTML +=
-			"x = (" +
-			avg() +
-			katex.renderToString("\\pm") +
-			epsilon +
-			")" +
-			dimension +
-			", p = " +
-			p +
-			"<br>";
-	}
+        container.innerHTML += 'x = (' + avg() + katex.renderToString('\\pm') + delta + ')' + dimension +
+            ', p = ' + p + '<br>'
+    } else {
+        container.innerHTML += katex.renderToString('x = \\bar{x} \\pm t_{\\frac{1+p}{2}}(n-1)\\times S_x') + ', p = ' + p + '<br>'
+        container.innerHTML += 'n = ' + values.length + ', p = 0.95 =>' + katex.renderToString('t_{\\frac{1+p}{2}}(n-1)=') + kvantilStudenta + '<br>'
+        container.innerHTML += katex.renderToString('S_{\\bar{x}} = \\frac{S_{x}}{\\sqrt{n}} = \\frac{' + sd() + '}{\\sqrt{' + values.length + '}}=' + sdX()) + '(' + dimension + ')' + '<br>'
+        container.innerHTML += 'x = (' + avg() + katex.renderToString('\\pm') + epsilon + ')' + dimension +
+            ', p = ' + p + '<br>'
+    }
 
-	$("#test").append(container);
+    $('#test').append(container)
 }
 
 function showCorrection() {
-	let container = document.createElement("div");
-	container.id = "correction";
-	const skoSystem =
-		katex.renderToString(
-			"S_{\\Theta} = \\frac{\\Theta}{\\sqrt{3}} = \\frac{" +
-				borderSystem +
-				"}{\\sqrt{3}}=" +
-				sdSystem()
-		) +
-		"(" +
-		dimension +
-		")";
-	container.innerHTML =
-		++repeat +
-		") Исключение систематической погрешности путем введения поправок<br>" +
-		skoSystem +
-		"<br>" +
-		++repeat +
-		") Проверка условия введения поправки<br>";
-	container.innerHTML += katex.renderToString(
-		"|c| > 0.5\\frac{S_{\\Theta}^2}{S_x} = |" +
-			system +
-			"|" +
-			" > 0.5\\frac{" +
-			sdSystem() +
-			"^2}{" +
-			sd() +
-			"} =>"
-	);
-	if (checkCorrection()) {
-		container.innerHTML +=
-			katex.renderToString(
-				Math.abs(system) +
-					">" +
-					Number(0.5 * (Math.pow(sdSystem(), 2) / sd())).toFixed(
-						decimals
-					)
-			) + " => условия выполнены<br>";
-		container.innerHTML +=
-			++repeat +
-			") Введение поправки<br>" +
-			katex.renderToString("\\bar{x}' - ") +
-			"неисправленный результат<br>" +
-			katex.renderToString(
-				"\\bar{x} = \\bar{x}' + c = " +
-					avg() +
-					(+system).toFixed(decimals) +
-					"=" +
-					(+avg() + +system).toFixed(decimals)
-			) +
-			"(" +
-			dimension +
-			")";
-	} else {
-		container.innerHTML +=
-			katex.renderToString(
-				Math.abs(system) +
-					"\\le" +
-					Number(0.5 * (Math.pow(sdSystem(), 2) / sd())).toFixed(
-						decimals
-					)
-			) + " => условия не выполнены";
-	}
-	$("#test").append(container);
+    let container = document.createElement('div')
+    container.id = "correction"
+    const skoSystem = katex.renderToString('S_{\\Theta} = \\frac{\\Theta}{\\sqrt{3}} = \\frac{' + borderSystem + '}{\\sqrt{3}}=' + sdSystem()) + '(' + dimension + ')'
+    container.innerHTML = ++repeat + ') Исключение систематической погрешности путем введения поправок<br>' + skoSystem + '<br>' + ++repeat + ') Проверка условия введения поправки<br>'
+    container.innerHTML += katex.renderToString('|c| > 0.5\\frac{S_{\\Theta}^2}{S_x} = |' + system + '|' + ' > 0.5\\frac{' + sdSystem() + '^2}{' + sd() + '} =>')
+    if (checkCorrection()) {
+        container.innerHTML += katex.renderToString(Math.abs(system) + '>' + Number(0.5 * (Math.pow(sdSystem(), 2) / sd())).toFixed(decimals)) + ' => условия выполнены<br>';
+        container.innerHTML += ++repeat + ') Введение поправки<br>' + katex.renderToString('\\bar{x}\' - ') + 'неисправленный результат<br>' +
+            katex.renderToString('\\bar{x} = \\bar{x}\' + c = ' + avg() + (+system).toFixed(decimals) + '=' + (+avg() + (+system)).toFixed(decimals)) + '(' + dimension + ')'
+    } else { container.innerHTML += katex.renderToString(Math.abs(system) + '\\le' + Number(0.5 * (Math.pow(sdSystem(), 2) / sd())).toFixed(decimals)) + ' => условия не выполнены' }
+    $('#test').append(container)
 }
+
 
 function sdX() {
 	const sdX = sd() / Math.sqrt(values.length);
