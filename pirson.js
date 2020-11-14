@@ -395,13 +395,14 @@ function calc() {
 		unionTable(tempAr);
 		lastTable();
 		last();
-	} else
+	} else {
 		container.innerHTML += `n = ${
 			values.length
 		} < 50 =>  ${katex.renderToString(
 			"\\chi^2"
 		)} Критерий Пирсона не может быть использован<br>`;
-	$("#test").append(container);
+		$("#test").append(container);
+	}
 }
 
 function showValues() {
